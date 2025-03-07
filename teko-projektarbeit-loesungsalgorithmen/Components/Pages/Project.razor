@@ -1,0 +1,10 @@
+﻿@page "/projects/{id:int}"
+
+<h3>Project</h3>
+
+Project ID: @id
+
+@code {
+	[Parameter]
+	public int id { get; set; }
+}

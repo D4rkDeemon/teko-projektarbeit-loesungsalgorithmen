@@ -1,7 +1,23 @@
 ﻿@page "/"
+@using teko_projektarbeit_loesungsalgorithmen.Services
+@using teko_projektarbeit_loesungsalgorithmen.Objects
+
+@inject DataService dataService
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+Liste der Projekte: @foreach (Objects.Project project in projects)
+{
+    <span>@project.Name</span>
+}
+
+@code {
+    List<Objects.Project> projects; 
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = dataService.Projects;
+    }
+}

@@ -1,10 +1,16 @@
 using teko_projektarbeit_loesungsalgorithmen.Components;
+using teko_projektarbeit_loesungsalgorithmen.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSingleton<DataService>(sp =>
+{
+    return new DataService();
+});
 
 var app = builder.Build();
 
