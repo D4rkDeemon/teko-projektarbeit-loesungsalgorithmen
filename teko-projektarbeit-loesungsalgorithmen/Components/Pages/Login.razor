@@ -1,6 +1,57 @@
 ﻿@page "/login"
-<h3>Login</h3>
+
+@using teko_projektarbeit_loesungsalgorithmen.Components.Layout
+@using teko_projektarbeit_loesungsalgorithmen.Objects
+@using teko_projektarbeit_loesungsalgorithmen.Services
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+@rendermode InteractiveServer
+
+@inject DataService dataService
+@inject SessionService SessionService
+@inject ProtectedSessionStorage ProtectedSessionStore
+@inject NavigationManager NavigationManager
+
+@layout LoginLayout
+
+<div class="login-box">
+    <div class="login-box-inner">
+        <h3>Login</h3>
+
+        <fieldset>
+            <label for="user-dropdown">Bitte gewünschten Testuser auswählen:</label>
+            <select @bind="selectedValue" class="form-select" id="user-dropdown">
+                @foreach (User user in users)
+                {
+                    <option value="@user.Id">@user.Name (@user.Role)</option>
+                }
+            </select>
+        </fieldset>
+
+        <button class="btn btn-primary" @onclick="SetUser">Auswahl speichern.</button>
+
+    </div>
+    <p>@log</p>
+</div>
 
 @code {
+    string log = "";
+    List<Objects.User> users = new List<User>();
+    private int counter = 0;
+    int selectedValue = 1;
 
+    protected override async Task OnInitializedAsync()
+    {
+        users = dataService.Users;
+    }
+
+    private async Task SetUser() {
+        Console.WriteLine("SetUser called!");
+        if (selectedValue != 0)
+        {
+            Console.WriteLine("selected value not 0!");
+            await ProtectedSessionStore.SetAsync("userId", (int)selectedValue);
+            NavigationManager.NavigateTo("/");
+        }
+    }
 }

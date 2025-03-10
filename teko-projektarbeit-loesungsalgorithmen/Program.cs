@@ -7,10 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Load our custom services
 builder.Services.AddSingleton<DataService>(sp =>
 {
     return new DataService();
 });
+
+builder.Services.AddScoped<SessionService>();
 
 var app = builder.Build();
 

@@ -37,6 +37,11 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
             Projects = ParseDataFile<Project>(ProjectsFileName) ?? CreateDemoProjects();
         }
 
+        public User? GetUserById(int userId)
+        {
+            return _users.Where(i => i.Id == userId).FirstOrDefault();
+        }
+
         private List<T> ParseDataFile<T>(string filePath)
         {
             if (!File.Exists(filePath))
@@ -50,7 +55,7 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
 
         private List<Project> CreateDemoProjects()
         {
-            return new List<Project>() { new Project("Testproject", Users[0].Id, "Testfirma", "Testprojekt der Testfirma")};
+            return new List<Project>() { new Project(1, "Testproject", Users[0].Id, "Testfirma", "Testprojekt der Testfirma")};
         }
         private List<User> CreateDemoUsers()
         {

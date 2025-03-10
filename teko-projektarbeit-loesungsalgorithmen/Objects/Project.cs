@@ -11,8 +11,9 @@ public class Project
 
     public string Description { get; set; }
 
-    public Project(string name, int projectLeadId, string customerName, string description)
+    public Project(int id, string name, int projectLeadId, string customerName, string description)
     {
+        Id = id;
         Name = name;
         ProjectLeadId = projectLeadId;
         CustomerName = customerName;

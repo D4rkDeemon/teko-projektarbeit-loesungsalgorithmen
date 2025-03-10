@@ -1,29 +1,36 @@
 ﻿@page "/"
+
 @using teko_projektarbeit_loesungsalgorithmen.Services
 @using teko_projektarbeit_loesungsalgorithmen.Objects
-
-@inject DataService dataService
-
+@inject NavigationManager NavigationManager
+@inject SessionService SessionService
+@inject DataService DataService
+@rendermode InteractiveServer
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
-Liste der Projekte: 
-<ul>
+<h1>Hallo @if (CurrentUser != null) { 
+        @CurrentUser.Name 
+    }</h1>
+<h2>Projekte</h2>
+<div class="row">
     @foreach (Objects.Project project in projects)
     {
-        <li><span>@project.Name</span></li>
+        <article class="project-card card col-md-6 col-lg-4">
+            <h3>@project.Name</h3>
+            <p>Lead: @project.Name</p>
+            <a href="/projects/@project.Id">Mehr</a>
+        </article>
     }
-</ul>
+</div>
 
-
-Liste der User:
+@* Liste der User:
 <ul>
 
-@foreach (Objects.User user in users)
-{
-    <li><span>@user.Name</span></li>
-}
-</ul>
+    @foreach (Objects.User user in users)
+    {
+        <li><span>@user.Name</span></li>
+    }
+</ul> *@
 
 @code {
     List<Objects.Project> projects; 
@@ -31,7 +38,33 @@ Liste der User:
 
     protected override async Task OnInitializedAsync()
     {
-        projects = dataService.Projects;
-        users = dataService.Users;
+        projects = DataService.Projects;
+        users = DataService.Users;
     }
+
+    int? userId;
+    User? CurrentUser; 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) {
+            userId = await SessionService.GetUserId();
+
+            if (userId == null) {
+                NavigationManager.NavigateTo("/login");
+            }
+
+            CurrentUser = DataService.GetUserById((int)userId);
+
+            StateHasChanged();
+        }
+    }
+
+
+    public async void LogOut()
+    {
+        await SessionService.RemoveSession();
+        NavigationManager.NavigateTo("/login");
+    }
+    
 }

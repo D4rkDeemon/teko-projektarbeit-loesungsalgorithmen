@@ -1,0 +1,16 @@
+﻿.login-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-box-inner {
+    box-shadow: 0 0 45px #00000055;
+    padding: 2rem;
+    width: min(450px, 100%);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
