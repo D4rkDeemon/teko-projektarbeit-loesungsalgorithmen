@@ -7,17 +7,31 @@
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
+Liste der Projekte: 
+<ul>
+    @foreach (Objects.Project project in projects)
+    {
+        <li><span>@project.Name</span></li>
+    }
+</ul>
 
-Liste der Projekte: @foreach (Objects.Project project in projects)
+
+Liste der User:
+<ul>
+
+@foreach (Objects.User user in users)
 {
-    <span>@project.Name</span>
+    <li><span>@user.Name</span></li>
 }
+</ul>
 
 @code {
     List<Objects.Project> projects; 
+    List<Objects.User> users; 
 
     protected override async Task OnInitializedAsync()
     {
         projects = dataService.Projects;
+        users = dataService.Users;
     }
 }

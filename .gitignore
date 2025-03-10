@@ -262,3 +262,4 @@ __pycache__/
 
 obj/
 bin/
+/teko-projektarbeit-loesungsalgorithmen/Storage/*

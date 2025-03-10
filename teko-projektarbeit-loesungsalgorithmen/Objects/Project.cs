@@ -5,16 +5,16 @@ public class Project
         public int Id { get; set; }
     public string Name { get; set; }
 
-    public User ProjectLead { get; set; }
+    public int ProjectLeadId { get; set; }
 
     public string CustomerName { get; set; }
 
     public string Description { get; set; }
 
-    public Project(string name, User projectLead, string customerName, string description)
+    public Project(string name, int projectLeadId, string customerName, string description)
     {
         Name = name;
-        ProjectLead = projectLead;
+        ProjectLeadId = projectLeadId;
         CustomerName = customerName;
         Description = description;
     }
