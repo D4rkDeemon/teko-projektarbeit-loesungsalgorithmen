@@ -27,7 +27,7 @@
 
     private Objects.Project EditInstance;
 
-    public Project()
+    protected override async Task OnInitializedAsync()
     {
         List<Objects.Project> projectList = DataService.GetProjectById(ProjectId, 1);
 
