@@ -65,6 +65,12 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
         private void WriteDataToFile<T>(List<T> dataList)
         {
             string filePath = typeof(T) == typeof(Project) ? ProjectsFileName : UsersFileName;
+            string directoryPath = Path.GetDirectoryName(filePath);
+
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
 
             using var stream = File.OpenWrite(filePath);
             JsonSerializer.Serialize<List<T>>(stream, dataList);

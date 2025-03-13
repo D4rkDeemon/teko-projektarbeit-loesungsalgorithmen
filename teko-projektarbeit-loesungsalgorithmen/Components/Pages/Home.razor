@@ -52,11 +52,11 @@
 
             if (userId == null) {
                 NavigationManager.NavigateTo("/login");
+            } else {
+                CurrentUser = DataService.GetUserById((int)userId);
+                StateHasChanged();
             }
 
-            CurrentUser = DataService.GetUserById((int)userId);
-
-            StateHasChanged();
         }
     }
 
