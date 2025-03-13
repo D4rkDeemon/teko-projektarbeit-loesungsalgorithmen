@@ -29,14 +29,14 @@
 
     public Project()
     {
-        List<Object.Project> projectList = DataService.GetProjectById(ProjectId, 1);
+        List<Objects.Project> projectList = DataService.GetProjectById(ProjectId, 1);
 
         if (projectList.Count > 0)
         {
             EditInstance = projectList[0];
         } else
         {
-            EditInstance = new Objects.Project(0, "", 0, "", "")
+            EditInstance = new Objects.Project(0, "", 0, "", "");
         }
     }
 
