@@ -1,46 +1,70 @@
-﻿@using teko_projektarbeit_loesungsalgorithmen.Services
+﻿@using static teko_projektarbeit_loesungsalgorithmen.Objects.User
+@using teko_projektarbeit_loesungsalgorithmen.Services
 @using teko_projektarbeit_loesungsalgorithmen.Objects
+
+@rendermode InteractiveServer
 
 @inject DataService DataService
 @inject NavigationManager NavigationManager
 @inject SessionService SessionService
 
 <div class="card">
-    <div class="card-header">
-        <h3>@(EditInstance == null ? "New Project" : "Edit Project")</h3>
-    </div>
-    <div class="card-body">
-        <label>Projektname:</label>
-        <input @bind="EditInstance.Name" class="form-control" />
+    <div class="card-body row">
+        <fieldset class="col-6 mb-3">
+            <label>Projektname:</label>
+            <input @bind="EditInstance.Name" class="form-control" disabled="@(CurrentUser.Role != ProjectRole.Lead || DisallowEdit )" />
+        </fieldset>
+    
+        <fieldset class="col-6 mb-3">
+            <label>Kundenname:</label>
+            <input @bind="EditInstance.CustomerName" class="form-control" disabled="@(CurrentUser.Role != ProjectRole.Lead || DisallowEdit)" />
+        </fieldset>
 
-        <label>Kundenname:</label>
-        <input @bind="EditInstance.CustomerName" class="form-control" />
+        <fieldset class="col-12 mb-3">
+            <label>Beschreibung:</label>
+            <input @bind="EditInstance.Description" class="form-control" disabled="@(CurrentUser.Role != ProjectRole.Lead || DisallowEdit)" />
+        </fieldset>
 
-        <label>Beschreibung:</label>
-        <input @bind="EditInstance.Description" class="form-control" />
-
-        <button @onclick="SaveProject" class="btn btn-primary">Save</button>
+        @if (CurrentUser.Role == ProjectRole.Lead || DisallowEdit)
+        {
+            <div class="col-12">
+                <button @onclick="SaveProject" class="btn btn-primary">Save</button>
+            </div>
+        }
     </div>
 </div>
 
 @code {
-    [Parameter]
-    public int ProjectId { get; set; }
 
-    private Objects.Project EditInstance;
+    [Parameter]
+    public int ProjectId { get; set; }    
+    [Parameter]
+    public bool DisallowEdit { get; set; }
+
+    private Objects.Project EditInstance = new Objects.Project(0, "", 0, "", "");
+    private User CurrentUser = new User(0, "", ProjectRole.Staff);
 
     protected override async Task OnInitializedAsync()
     {
         List<Objects.Project> projectList = DataService.GetProjectById(ProjectId, 1);
 
+
+        // Overwrite default empty project if we are editing one.
         if (projectList.Count > 0)
         {
             EditInstance = projectList[0];
-        } else
-        {
-            EditInstance = new Objects.Project(0, "", 0, "", "");
-        }
+        } 
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            CurrentUser = DataService.GetUserById((int)await SessionService.GetUserId()) ?? new User(0, "", ProjectRole.Staff);
+        }
+        StateHasChanged();
+    }
+
 
     private async Task SaveProject()
     {
@@ -52,7 +76,7 @@
             EditInstance.Version++;
         } else {
             EditInstance.Id = DataService.GetNewId(); 
-            EditInstance.ProjectLeadId = (int) await SessionService.GetUserId();
+            EditInstance.ProjectLeadId = CurrentUser.Id;
         }
 
         tempProjects.Add(EditInstance);

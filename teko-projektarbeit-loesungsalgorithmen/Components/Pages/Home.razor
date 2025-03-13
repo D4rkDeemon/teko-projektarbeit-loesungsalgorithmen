@@ -2,55 +2,54 @@
 
 @using teko_projektarbeit_loesungsalgorithmen.Services
 @using teko_projektarbeit_loesungsalgorithmen.Objects
+
 @inject NavigationManager NavigationManager
 @inject SessionService SessionService
 @inject DataService DataService
+
 @rendermode InteractiveServer
+
 <PageTitle>Home</PageTitle>
 
 <h1>Hallo @if (CurrentUser != null) { 
         @CurrentUser.Name 
     }</h1>
     <div class="row">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mb-2">
             <h2>Projekte</h2>
        
-            <a href="/projects/0" class="btn btn-primary">Neues Projekt</a>
+
+            @if (CurrentUser.Role == User.ProjectRole.Lead) {
+                <a href="/projects/0" class="btn btn-primary">Neues Projekt</a>
+        }
         </div>
 
 </div>
 <div class="row">
     @foreach (Objects.Project project in projects)
     {
-        <article class="project-card card col-md-6 col-lg-4">
-            <h3>@project.Name</h3>
-            <p>Lead: @project.Name</p>
-            <a href="/projects/@project.Id">Mehr</a>
-        </article>
+        <div class="col-md-6 col-lg-4">
+            <article class="project-card card p-3 mb-4 mt-1">
+                <h3>@project.Name (@project.Id)</h3>
+                <p>Lead: @project.Name</p>
+                <a href="/projects/@project.Id">Mehr</a>
+            </article>
+        </div>
     }
 </div>
-
-@* Liste der User:
-<ul>
-
-    @foreach (Objects.User user in users)
-    {
-        <li><span>@user.Name</span></li>
-    }
-</ul> *@
 
 @code {
     List<Objects.Project> projects = new List<Objects.Project>();
     List<Objects.User> users = new List<Objects.User>();
+
+    int? userId;
+    User? CurrentUser = new User(0,"",User.ProjectRole.Staff);
 
     protected override async Task OnInitializedAsync()
     {
         projects = DataService.GetAllProjects();
         users = DataService.Users;
     }
-
-    int? userId;
-    User? CurrentUser; 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

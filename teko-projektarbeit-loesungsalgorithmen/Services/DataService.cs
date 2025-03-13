@@ -79,11 +79,19 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
         // Returns the {limit} newest versions of the project with id {id}
         public List<Project> GetProjectById(int id, int limit = 1)  
         {
-            return Projects
+            List<Project> returnList = new List<Project>();
+            List<Project> queryList = Projects
                 .Where(q => q.Id == id)
                 .OrderByDescending(q => q.Version)
                 .Take(limit)
                 .ToList();
+
+            foreach (var query in queryList)
+            {
+                returnList.Add(query.Copy());
+            }
+
+            return returnList;
         }
 
         public List<Project> GetAllProjects(bool includeVersions = false)
@@ -115,7 +123,7 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
 
         public int GetNewId()
         {
-            return (Projects.OrderByDescending(q => q.Id).First()).Id;
+            return (Projects.OrderByDescending(q => q.Id).First()).Id + 1;
         }
     }
 }

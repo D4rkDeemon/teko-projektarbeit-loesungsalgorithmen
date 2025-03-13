@@ -13,7 +13,7 @@
         public string Name { get; set; }
         public ProjectRole Role { get; set; }
 
-        public User(int id, string name, ProjectRole role)
+        public User(int id, string name, ProjectRole role = ProjectRole.Staff)
         {
             Id = id;
             Name = name;
