@@ -2,6 +2,7 @@
 
 @using static teko_projektarbeit_loesungsalgorithmen.Objects.User
 @using teko_projektarbeit_loesungsalgorithmen.Components.Partials
+@using teko_projektarbeit_loesungsalgorithmen.Objects
 @using teko_projektarbeit_loesungsalgorithmen.Services
 
 @inject SessionService SessionService
@@ -15,15 +16,55 @@
 
     <a href="@(NavigationManager.Uri)/history" class="mb-2">Ältere Versionen</a>
 </div>
-<Project ProjectId="id">
-</Project>
+
+<Project EditInstance="Project"></Project>
+
+<tr></tr>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <h3>Information hinzufügen</h3>
+        <textarea class="comment-input" @bind="InformationText"></textarea>
+
+        <div class="row">
+            @for (int i = 0; i < InformationTags.Length; i++) {
+                int localIndex = i;
+                <div>
+                    <input @bind="InformationTags[localIndex]" />
+                </div>
+            }
+        </div>
+
+
+        <button @onclick="SaveInformation" class="btn btn-primary">Speichern</button>
+
+        <h3>Erfasste Informationen</h3>
+        <div class="row">
+            @foreach (Objects.Information information in ProjectInformation) 
+            {
+                <div class="col-12">
+                    @information.Description
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
 
 @code {
 
     [Parameter]
     public int id { get; set; }
 
+    public Objects.Project Project { get; set; } = new Objects.Project(0, "", 0, "", "", 1);
+
     Objects.User CurrentUser = new Objects.User(0, "", ProjectRole.Staff);
+
+    public List<Information> ProjectInformation = new List<Information>();
+
+    public string InformationText { get; set; } = "";
+    public string[] InformationTags { get; set; } = new string[3] { "", "", ""};
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -34,4 +75,26 @@
         StateHasChanged();
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        List<Objects.Project> projectList = DataService.GetProjectById(id, 1);
+        ProjectInformation = DataService.GetInformationsByProjectId(id);
+
+        // Overwrite default empty project if we are editing one.
+        if (projectList.Count > 0)
+        {
+            Project = projectList[0];
+        }
+    }
+
+    private void SaveInformation()
+    {
+        List<Objects.Information> tempInformations = DataService.Informations;
+
+        tempInformations.Add(new Objects.Information(DataService.GetNewInformationId(), Project.Id, InformationText, CurrentUser.Id, InformationTags, 1));
+
+        DataService.Informations = tempInformations;
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    }
 }

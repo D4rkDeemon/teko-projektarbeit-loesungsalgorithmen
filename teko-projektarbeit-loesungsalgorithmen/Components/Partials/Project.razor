@@ -14,7 +14,7 @@
             <label>Projektname:</label>
             <input @bind="EditInstance.Name" class="form-control" disabled="@(CurrentUser.Role != ProjectRole.Lead || DisallowEdit )" />
         </fieldset>
-    
+
         <fieldset class="col-6 mb-3">
             <label>Kundenname:</label>
             <input @bind="EditInstance.CustomerName" class="form-control" disabled="@(CurrentUser.Role != ProjectRole.Lead || DisallowEdit)" />
@@ -25,10 +25,10 @@
             <input @bind="EditInstance.Description" class="form-control" disabled="@(CurrentUser.Role != ProjectRole.Lead || DisallowEdit)" />
         </fieldset>
 
-        @if (CurrentUser.Role == ProjectRole.Lead || DisallowEdit)
+        @if (!(CurrentUser.Role != ProjectRole.Lead || DisallowEdit))
         {
             <div class="col-12">
-                <button @onclick="SaveProject" class="btn btn-primary">Save</button>
+                <button @onclick="SaveProject" class="btn btn-primary">Speichern</button>
             </div>
         }
     </div>
@@ -36,25 +36,15 @@
 
 @code {
 
-    [Parameter]
-    public int ProjectId { get; set; }    
+
+
     [Parameter]
     public bool DisallowEdit { get; set; }
 
-    private Objects.Project EditInstance = new Objects.Project(0, "", 0, "", "");
+    [Parameter]
+    public  Objects.Project EditInstance { get; set; }
+
     private User CurrentUser = new User(0, "", ProjectRole.Staff);
-
-    protected override async Task OnInitializedAsync()
-    {
-        List<Objects.Project> projectList = DataService.GetProjectById(ProjectId, 1);
-
-
-        // Overwrite default empty project if we are editing one.
-        if (projectList.Count > 0)
-        {
-            EditInstance = projectList[0];
-        } 
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -66,16 +56,15 @@
     }
 
 
-    private async Task SaveProject()
+    private void SaveProject()
     {
-        Console.WriteLine("save project");
         List<Objects.Project> tempProjects = DataService.Projects;
 
         if (EditInstance.Id != 0) {
             // Increase version number if it is an update
             EditInstance.Version++;
         } else {
-            EditInstance.Id = DataService.GetNewId(); 
+            EditInstance.Id = DataService.GetNewProjectId();
             EditInstance.ProjectLeadId = CurrentUser.Id;
         }
 

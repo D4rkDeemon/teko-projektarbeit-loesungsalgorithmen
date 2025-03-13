@@ -8,11 +8,11 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
 {
     public class DataService
 {
-        const string ProjectsFileName = "Storage/Projects.json";
-        const string UsersFileName = "Storage/Users.json";
+        const string StorageFolder = "Storage/";
 
         private List<Project> _projects;
         private List<User> _users;
+        private List<Information> _informations;
 
         public List<Project> Projects {
             get => _projects;
@@ -30,11 +30,21 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
                 WriteDataToFile<User>(_users);
             }
         }
+        public List<Information> Informations
+        {
+            get => _informations;
+            set
+            {
+                _informations = value;
+                WriteDataToFile<Information>(_informations);
+            }
+        }
 
         public DataService() 
         {
-            Users = ParseDataFile<User>(UsersFileName) ?? CreateDemoUsers();
-            Projects = ParseDataFile<Project>(ProjectsFileName) ?? CreateDemoProjects();
+            Users = ParseDataFile<User>() ?? CreateDemoUsers();
+            Projects = ParseDataFile<Project>() ?? CreateDemoProjects();
+            Informations = ParseDataFile<Information>() ?? new List<Information>();
         }
 
         public User? GetUserById(int userId)
@@ -42,8 +52,10 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
             return _users.Where(i => i.Id == userId).FirstOrDefault();
         }
 
-        private List<T> ParseDataFile<T>(string filePath)
+        private List<T> ParseDataFile<T>()
         {
+            string filePath = StorageFolder + typeof(T).Name + "s.json";
+
             if (!File.Exists(filePath))
             {
                 return null;
@@ -64,7 +76,7 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
 
         private void WriteDataToFile<T>(List<T> dataList)
         {
-            string filePath = typeof(T) == typeof(Project) ? ProjectsFileName : UsersFileName;
+            string filePath = StorageFolder + typeof(T).Name + "s.json";
             string directoryPath = Path.GetDirectoryName(filePath);
 
             if (!Directory.Exists(directoryPath))
@@ -121,9 +133,32 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
             return resultList;
         }
 
-        public int GetNewId()
+        public List<Information> GetInformationsByProjectId(int id)
         {
-            return (Projects.OrderByDescending(q => q.Id).First()).Id + 1;
+            List<Information> resultList = new List<Information>();
+
+            foreach (Information information in Informations) { 
+            
+                if (information.ProjectId == id)
+                {
+                    resultList.Add(information);
+                }
+            }
+
+            return resultList;
+        }
+
+        public int GetNewProjectId()
+        {
+            List<Project> latest = Projects.OrderByDescending(q => q.Id).ToList();
+
+            return (latest.Any() ? latest.First().Id + 1 : 1);
+        }        
+        public int GetNewInformationId()
+        {
+            List<Information> latest = Informations.OrderByDescending(q => q.Id).ToList();
+
+            return (latest.Any() ? latest.First().Id + 1 : 1);
         }
     }
 }

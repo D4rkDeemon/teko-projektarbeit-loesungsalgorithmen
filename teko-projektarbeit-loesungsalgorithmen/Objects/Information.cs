@@ -8,14 +8,16 @@
 
         public string Description { get; set; }
         public string[] Tags { get; set; }
-        public User Author {  get; set; }
+        public int AuthorId {  get; set; }
 
         public int Version { get; set; }
 
-        public Information(string description, User author, string[]? tags, int version)
+        public Information(int id, int projectId, string description, int authorId, string[]? tags, int version)
         {
+            Id = id;
+            ProjectId = projectId;
             Description = description;
-            Author = author;
+            AuthorId = authorId;
             Tags = tags ?? new string[3];
             Version = version;
         }
