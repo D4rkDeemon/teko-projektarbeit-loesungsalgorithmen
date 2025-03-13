@@ -1,0 +1,47 @@
+﻿@using teko_projektarbeit_loesungsalgorithmen.Services
+@using teko_projektarbeit_loesungsalgorithmen.Objects
+
+@inject DataService DataService
+
+<div class="card">
+    <div class="card-header">
+        <h3>@(EditInstance == null ? "New Project" : "Edit Project")</h3>
+    </div>
+    <div class="card-body">
+        <label>Projektname:</label>
+        <input @bind="EditInstance.Name" class="form-control" />
+
+        <label>Kundenname:</label>
+        <input @bind="EditInstance.CustomerName" class="form-control" />
+
+        <label>Beschreibung:</label>
+        <input @bind="EditInstance.Description" class="form-control" />
+
+        <button @onclick="Save" class="btn btn-primary">Save</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ProjectId { get; set; }
+
+    private Objects.Project EditInstance;
+
+    public Project()
+    {
+        List<Object.Project> projectList = DataService.GetProjectById(ProjectId, 1);
+
+        if (projectList.Count > 0)
+        {
+            EditInstance = projectList[0];
+        } else
+        {
+            EditInstance = new Objects.Project(0, "", 0, "", "")
+        }
+    }
+
+    protected async void Save()
+    {
+
+    }
+}

@@ -1,8 +1,8 @@
 ﻿namespace teko_projektarbeit_loesungsalgorithmen.Objects {
 public class Project
 {
+    public int Id { get; set; }
 
-        public int Id { get; set; }
     public string Name { get; set; }
 
     public int ProjectLeadId { get; set; }
@@ -11,13 +11,16 @@ public class Project
 
     public string Description { get; set; }
 
-    public Project(int id, string name, int projectLeadId, string customerName, string description)
+    public int Version { get; set; }
+
+    public Project(int id, string name, int projectLeadId, string customerName, string description, int version = 1)
     {
         Id = id;
         Name = name;
         ProjectLeadId = projectLeadId;
         CustomerName = customerName;
         Description = description;
+        Version = version;
     }
 
 }

@@ -1,0 +1,13 @@
+﻿@page "/projects/{id:int}"
+@using teko_projektarbeit_loesungsalgorithmen.Components.Partials
+
+<h3>Project</h3>
+
+<Project ProjectId="id">
+</Project>
+
+
+@code {
+	[Parameter]
+	public int id { get; set; }
+}

@@ -11,7 +11,14 @@
 <h1>Hallo @if (CurrentUser != null) { 
         @CurrentUser.Name 
     }</h1>
-<h2>Projekte</h2>
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <h2>Projekte</h2>
+        
+            <a href="/projects/new" class="btn btn-primary">Neues Projekt</a>
+        </div>
+
+</div>
 <div class="row">
     @foreach (Objects.Project project in projects)
     {
@@ -33,8 +40,8 @@
 </ul> *@
 
 @code {
-    List<Objects.Project> projects; 
-    List<Objects.User> users; 
+    List<Objects.Project> projects = new List<Objects.Project>();
+    List<Objects.User> users = new List<Objects.User>();
 
     protected override async Task OnInitializedAsync()
     {

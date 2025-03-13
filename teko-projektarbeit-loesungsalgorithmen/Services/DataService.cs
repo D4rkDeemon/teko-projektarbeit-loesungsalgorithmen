@@ -76,6 +76,14 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
             JsonSerializer.Serialize<List<T>>(stream, dataList);
         }
 
-        
+        // Returns the {limit} newest versions of the project with id {id}
+        public List<Project> GetProjectById(int id, int limit = 1)  
+        {
+            return Projects
+                .Where(q => q.Id == id)
+                .OrderByDescending(q => q.Version)
+                .Take(limit)
+                .ToList();
+        }
     }
 }
