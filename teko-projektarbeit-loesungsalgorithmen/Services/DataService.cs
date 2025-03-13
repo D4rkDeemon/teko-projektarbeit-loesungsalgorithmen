@@ -85,5 +85,37 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
                 .Take(limit)
                 .ToList();
         }
+
+        public List<Project> GetAllProjects(bool includeVersions = false)
+        {
+            List<Project> resultList = Projects
+                .OrderByDescending(q => q.Id)
+                .ThenByDescending(q => q.Version)
+                .ToList();
+
+            if (!includeVersions)
+            {
+                int previousId = 0;
+                List<Project> tempList = new List<Project>();
+
+                foreach (Project project in resultList)
+                {
+                    if (previousId != project.Id)
+                    {
+                        previousId = project.Id;
+                        tempList.Add(project.Copy());
+                    }
+                }
+
+                resultList = tempList;
+            }
+
+            return resultList;
+        }
+
+        public int GetNewId()
+        {
+            return (Projects.OrderByDescending(q => q.Id).First()).Id;
+        }
     }
 }

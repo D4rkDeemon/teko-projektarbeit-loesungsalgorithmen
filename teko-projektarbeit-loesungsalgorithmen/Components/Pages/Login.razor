@@ -46,10 +46,8 @@
     }
 
     private async Task SetUser() {
-        Console.WriteLine("SetUser called!");
         if (selectedValue != 0)
         {
-            Console.WriteLine("selected value not 0!");
             await ProtectedSessionStore.SetAsync("userId", (int)selectedValue);
             NavigationManager.NavigateTo("/");
         }

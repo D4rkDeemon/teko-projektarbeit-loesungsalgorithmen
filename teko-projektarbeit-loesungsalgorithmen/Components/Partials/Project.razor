@@ -2,6 +2,8 @@
 @using teko_projektarbeit_loesungsalgorithmen.Objects
 
 @inject DataService DataService
+@inject NavigationManager NavigationManager
+@inject SessionService SessionService
 
 <div class="card">
     <div class="card-header">
@@ -17,7 +19,7 @@
         <label>Beschreibung:</label>
         <input @bind="EditInstance.Description" class="form-control" />
 
-        <button @onclick="Save" class="btn btn-primary">Save</button>
+        <button @onclick="SaveProject" class="btn btn-primary">Save</button>
     </div>
 </div>
 
@@ -40,8 +42,23 @@
         }
     }
 
-    protected async void Save()
+    private async Task SaveProject()
     {
+        Console.WriteLine("save project");
+        List<Objects.Project> tempProjects = DataService.Projects;
 
+        if (EditInstance.Id != 0) {
+            // Increase version number if it is an update
+            EditInstance.Version++;
+        } else {
+            EditInstance.Id = DataService.GetNewId(); 
+            EditInstance.ProjectLeadId = (int) await SessionService.GetUserId();
+        }
+
+        tempProjects.Add(EditInstance);
+
+        DataService.Projects = tempProjects;
+
+        NavigationManager.NavigateTo("/");
     }
 }
