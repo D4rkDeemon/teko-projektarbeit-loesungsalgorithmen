@@ -30,8 +30,9 @@
     {
         <div class="col-md-6 col-lg-4">
             <article class="project-card card p-3 mb-4 mt-1">
-                <h3>@project.Name (@project.Id)</h3>
-                <p>Lead: @project.Name</p>
+                <h3>@project.Name (#@project.Id)</h3>
+                <span>Kunde: @project.CustomerName</span>
+                <span>Projektleitung: @(DataService.GetUserById(project.ProjectLeadId).Name)</span>
                 <a href="/projects/@project.Id">Mehr</a>
             </article>
         </div>

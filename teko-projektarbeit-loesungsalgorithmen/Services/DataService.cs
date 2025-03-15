@@ -67,11 +67,11 @@ namespace teko_projektarbeit_loesungsalgorithmen.Services
 
         private List<Project> CreateDemoProjects()
         {
-            return new List<Project>() { new Project(1, "Testproject", Users[0].Id, "Testfirma", "Testprojekt der Testfirma")};
+            return new List<Project>() { new Project(1, "Webauftritt teko.ch", Users[0].Id, "TEKO", "Realisierung eines neuen Webauftritts für die TEKO Fachhoschlue.")};
         }
         private List<User> CreateDemoUsers()
         {
-            return new List<User> { new User(1, "Test 1", User.ProjectRole.Lead), new User(2, "Test 2", User.ProjectRole.Staff) };
+            return new List<User> { new User(1, "John", User.ProjectRole.Lead), new User(2, "Sam", User.ProjectRole.Staff) };
         }
 
         private void WriteDataToFile<T>(List<T> dataList)
