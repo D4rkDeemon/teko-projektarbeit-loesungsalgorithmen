@@ -3,14 +3,13 @@
     public class Comment
 {
         public int Id { get; set; }
-
         public string Text { get; set; }
-        public User Author { get; set; }
+        public int AuthorId { get; set; }
 
-        public Comment(string text, User author)
+        public Comment(string text, int authorId)
         {
             Text = text;
-            Author = author;
+            AuthorId = authorId;
         }
     }
 }
