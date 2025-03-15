@@ -6,8 +6,9 @@
         public string Text { get; set; }
         public int AuthorId { get; set; }
 
-        public Comment(string text, int authorId)
+        public Comment(int id, string text, int authorId)
         {
+            Id = Id;
             Text = text;
             AuthorId = authorId;
         }
