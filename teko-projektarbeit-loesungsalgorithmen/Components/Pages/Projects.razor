@@ -19,31 +19,53 @@
 
 <Project EditInstance="Project"></Project>
 
-<tr></tr>
-
-<div class="row mt-4">
-    <div class="col-12">
-        <h3>Information hinzufügen</h3>
-        <textarea class="comment-input" @bind="InformationText"></textarea>
-
-        <div class="row">
-            @for (int i = 0; i < InformationTags.Length; i++) {
-                int localIndex = i;
-                <div>
-                    <input @bind="InformationTags[localIndex]" />
+<div class="row mb- 4">
+    <div class="co-12">
+        <h2>Informationen</h2>
+        <h3>Neu erstellen</h3>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="information-text">Inhalt der Information</label>
+                    <textarea id="information-text" class="form-control comment-input" @bind="InformationText"></textarea>
                 </div>
-            }
+
+
+                <div class="row">
+                    @for (int i = 0; i < InformationTags.Length; i++)
+                    {
+                        int localIndex = i;
+                        <div class="col-4 mb-3">
+                            <label for="tag-@localIndex">Tag @(localIndex + 1)</label>
+                            <input id="tag-@localIndex" class="form-control" @bind="InformationTags[localIndex]" />
+                        </div>
+                    }
+                </div>
+
+                <button @onclick="SaveInformation" class="btn btn-primary">Speichern</button>
+            </div>
         </div>
 
-
-        <button @onclick="SaveInformation" class="btn btn-primary">Speichern</button>
-
         <h3>Erfasste Informationen</h3>
-        <div class="row">
-            @foreach (Objects.Information information in ProjectInformation) 
+        <div class="d-flex flex-wrap mb-4">
+            @foreach (Objects.Information information in ProjectInformation)
             {
-                <div class="col-12">
-                    @information.Description
+                <div class="col-12 mb-3 card">
+                    <div class="card-body row">
+                        <div class="col-12 d-flex justify-content-between heading mb-2">
+                            <div class="left">
+                                <span class="badge bg-secondary">@information.Tags[0]</span>
+                                <span class="badge bg-secondary">@information.Tags[1]</span>
+                                <span class="badge bg-secondary">@information.Tags[2]</span>
+                            </div>
+                            <div class="right">
+                                <span>Verfasst von: @(DataService.GetUserById(information.AuthorId).Name ?? "Gelöscht")</span>
+                            </div>
+                        </div>
+                        <p class="col-12 mb-0">
+                            @information.Description
+                        </p>
+                    </div>
                 </div>
             }
 
@@ -64,7 +86,7 @@
     public List<Information> ProjectInformation = new List<Information>();
 
     public string InformationText { get; set; } = "";
-    public string[] InformationTags { get; set; } = new string[3] { "", "", ""};
+    public string[] InformationTags { get; set; } = new string[3] { "", "", "" };
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
