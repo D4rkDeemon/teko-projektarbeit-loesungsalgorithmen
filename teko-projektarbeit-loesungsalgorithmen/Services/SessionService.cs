@@ -16,7 +16,7 @@ public class SessionService
 
     public async Task<int?> GetUserId()
     {
-        return await ProtectedSessionStorage.GetAsync<int?>("userId");
+        return (await ProtectedSessionStorage.GetAsync<int?>("userId")).Value;
     }
 
     public async Task RemoveSession()
